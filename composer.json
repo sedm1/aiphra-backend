@@ -4,7 +4,6 @@
         "psr-4": {
             "DB\\": "src/DB/",
             "API\\": "src/API/",
-            "Services\\": "src/Services/",
             "Selector\\": "src/Selector/"
         },
         "files": [
