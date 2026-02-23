@@ -8,7 +8,7 @@ use PDO;
 use PDOStatement;
 
 class Mysql extends AbstractDB {
-    protected array $config;
+    private array $config;
     public PDO $dbh;
     protected ?PDOStatement $pdoStatement = null;
     public string $query = '';

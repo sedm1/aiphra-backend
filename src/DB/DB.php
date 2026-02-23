@@ -17,7 +17,5 @@ function dbh(): Mysql {
         'charset' => $_ENV['DB_MYSQL_CHARSET'] ?? 'utf8mb4',
     ];
 
-    vd($config);
-
     return new Mysql($GLOBALS['dbh_mysql_site'], $config);
 }
