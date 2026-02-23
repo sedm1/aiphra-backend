@@ -272,22 +272,24 @@ class Mysql extends AbstractDB {
         return $this;
     }
 
-    public function set(string|array $data): static {
+    public function set(string|array $data, bool $duplicateUpdate = false, bool $sanitize = false): static {
         $this->query .= 'SET ';
 
         if (is_array($data)) {
             $dataStr = '';
             foreach ($data as $name => $val) {
                 $preparedColumnName = static::prepare_column_name($name);
-                $preparedVal = $this->prepare_val($val);
-                $dataStr .= '`' . $preparedColumnName . '` = ' . $preparedVal . ',';
+                $preparedVal = $this->prepare_val($val, $sanitize);
+                $dataStr .= "`$preparedColumnName` = $preparedVal,";
             }
             $dataStr = substr($dataStr, 0, strlen($dataStr) - 1);
         } else {
             $dataStr = $data;
         }
 
-        $this->query .= $dataStr . ' ';
+        $this->query .= "$dataStr ";
+
+        if ($duplicateUpdate) $this->query .= "ON DUPLICATE KEY UPDATE $dataStr ";
 
         return $this;
     }

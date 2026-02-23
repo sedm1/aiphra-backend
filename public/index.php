@@ -1,8 +1,13 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+use API\Types\Email;
 
-load_env(__DIR__ . '/../.env');
+require __DIR__ . '/bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+vd(123);
+
+$api = new \Services\Users\Methods\Reg\Add();
+$api->email = new Email('novikovn383@gmail.com');
+$api->call();
