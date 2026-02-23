@@ -1,9 +1,14 @@
 {
     "name": "aiphra/backend",
     "autoload": {
-        "psr-4": {
-            "Aiphra\\Backend\\": "src/"
-        }
+        "psr-4": {},
+        "files": [
+            "src/Globals/Debug.php",
+            "src/Globals/Env.php",
+            "src/DB/DB.php"
+        ]
     },
-    "require": {}
+    "require": {
+      "ext-pdo": "*"
+    }
 }

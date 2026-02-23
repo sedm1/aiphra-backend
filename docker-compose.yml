@@ -12,6 +12,8 @@ services:
       - ./public:/var/www/html/public:ro
     networks:
       - aiphra-net
+    env_file:
+      - .env
 
   nginx:
     image: nginx:1.27-alpine
