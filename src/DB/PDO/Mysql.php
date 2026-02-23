@@ -13,7 +13,6 @@ class Mysql extends AbstractDB {
     protected ?PDOStatement $pdoStatement = null;
     public string $query = '';
 
-    #[ArrayShape(['host' => 'string', 'user' => 'string', 'pass' => 'string', 'db' => 'string'])]
     public function __construct(&$dbh, &$config) {
         $this->config = &$config;
         if (!$dbh) {

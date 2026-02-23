@@ -1,7 +1,9 @@
 {
     "name": "aiphra/backend",
     "autoload": {
-        "psr-4": {},
+        "psr-4": {
+            "DB\\": "src/DB/"
+        },
         "files": [
             "src/Globals/Debug.php",
             "src/Globals/Env.php",
