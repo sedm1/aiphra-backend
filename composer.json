@@ -1,0 +1,9 @@
+{
+    "name": "aiphra/backend",
+    "autoload": {
+        "psr-4": {
+            "Aiphra\\Backend\\": "src/"
+        }
+    },
+    "require": {}
+}
