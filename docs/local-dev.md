@@ -1,25 +1,45 @@
-# Local development
+# Локальная разработка
 
-Goal: keep local dev simple. Backend can be edited directly and deployed by FTP if needed.
+Цель: простая локальная разработка. Бэкенд можно править напрямую и при желании деплоить по FTP.
 
-## PHP backend (local)
-Requirements:
-- PHP 8.5 (or 8.4 if 8.5 is not available locally)
+## PHP backend (локально)
+Требования:
+- PHP 8.5 (или 8.4, если 8.5 недоступен локально)
 
-Run locally:
+Запуск:
 ```bash
 cd backend
 php -S 127.0.0.1:9000 -t public
 ```
 
-Test:
-- Open http://127.0.0.1:9000/ — should return JSON.
+Проверка:
+- Откройте http://127.0.0.1:9000/ — должен вернуться JSON.
 
-## FTP workflow (optional)
-If you prefer editing via FTP:
-- Use the `public/` folder as the web root.
-- Upload `public/` and `src/` to your hosting.
-- Keep local source in sync with Git to avoid drift.
+## Доступ к БД (локально)
+Локальные доступы берём из `.env`, который не коммитится.
 
-## Production
-Production deploy is handled by CI/CD with Docker. Local PHP server is only for development.
+1. Скопируйте шаблон:
+```bash
+copy .env.example .env
+```
+2. Заполните значения:
+```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=aiphra
+DB_USER=aiphra
+DB_PASS=secret
+```
+
+Как подключать в коде:
+- Используйте `getenv('DB_HOST')` и т.д.
+- Если понадобится удобный загрузчик `.env`, добавим `vlucas/phpdotenv`.
+
+## FTP (опционально)
+Если хотите править через FTP:
+- `public/` — это webroot.
+- На сервер загружайте `public/` и `src/`.
+- Держите локальный код в Git, чтобы не было рассинхрона.
+
+## Продакшн
+Продакшн‑деплой через CI/CD и Docker. Локальный PHP‑сервер нужен только для разработки.
