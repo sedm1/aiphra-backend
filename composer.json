@@ -4,7 +4,8 @@
         "psr-4": {
             "DB\\": "src/DB/",
             "API\\": "src/API/",
-            "Services\\": "src/Services/"
+            "Services\\": "src/Services/",
+            "Selector\\": "src/Selector/"
         },
         "files": [
             "src/Globals/Debug.php",
@@ -13,6 +14,7 @@
         ]
     },
     "require": {
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-intl": "*"
     }
 }
