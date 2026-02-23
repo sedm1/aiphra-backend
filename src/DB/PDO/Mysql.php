@@ -3,7 +3,6 @@
 namespace DB\PDO;
 
 use DateTime;
-use JetBrains\PhpStorm\ArrayShape;
 use PDO;
 use PDOStatement;
 

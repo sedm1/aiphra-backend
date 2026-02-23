@@ -25,7 +25,7 @@ trait FetchStyleTrait {
 	 * Примеры:
 	 * - fetchAll - получить коллекцию объектов
 	 * - fetch - получить один объект
-	 * - fetchColumn - получить свойсвто объекта
+	 * - fetchColumn - получить свойство объекта
 	 *
 	 * @see FetchStyle
 	 * @see Selector::execFetch() - см. реализацию
