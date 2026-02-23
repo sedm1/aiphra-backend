@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+.fleet
+.DS_Store
+node_modules
+vendor
+docker
+docker-compose.yml
+.env
+.env.*
