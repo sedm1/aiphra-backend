@@ -16,5 +16,9 @@ try {
         $code = 500;
     }
     http_response_code($code);
-    echo $e->getMessage();
+
+    echo json_encode([
+        'error' => true,
+        'message' => $e->getMessage()
+    ]);
 }
