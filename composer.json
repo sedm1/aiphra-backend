@@ -2,12 +2,13 @@
     "name": "aiphra/backend",
     "autoload": {
         "psr-4": {
-            "DB\\": "src/DB/",
-            "API\\": "src/API/",
-            "Selector\\": "src/Selector/",
-            "Services\\": "src/Services",
-            "Utils\\": "src/Utils",
-            "Models\\": "src/Models"
+        "DB\\": "src/DB/",
+        "API\\": "src/API/",
+        "Selector\\": "src/Selector/",
+        "Controller\\": "src/Controller/",
+        "Services\\": "src/Services",
+        "Utils\\": "src/Utils",
+        "Models\\": "src/Models"
         },
         "files": [
             "src/Globals/Debug.php",

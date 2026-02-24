@@ -34,22 +34,13 @@ abstract class Actions {
         $formattedEmail = $email;
         if ($email instanceof Email) $formattedEmail = $email->value;
 
-        vd(dbh()
-            ->sel(['code'])
-            ->from(System\Mods\Actions::T_ACTIONS)
-            ->w([
-                'email' => $formattedEmail,
-                'code' => $code,
-            ])
-            ->fetch());
-
         return dbh()
-            ->sel(['code'])
+            ->sel(['action'])
             ->from(System\Mods\Actions::T_ACTIONS)
             ->w([
                 'email' => $formattedEmail,
                 'code' => $code,
             ])
-            ->fetch();
+            ->fetchColumn();
     }
 }

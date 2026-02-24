@@ -13,6 +13,7 @@ abstract class Reg {
         $action = System\Mods\Actions::get($email, $code);
         if (!$action) throw new \Exception('Событие не найдено', ERROR_CODE_NOT_FOUND);
 
+        vd($action);
         $action = System\Types\Action::tryFrom($action);
         vd($action);
     }
