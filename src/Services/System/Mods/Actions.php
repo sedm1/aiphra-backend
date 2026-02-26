@@ -30,11 +30,11 @@ abstract class Actions {
     /**
      * Получить тип события
      */
-    public static function get(string|Email $email, string $code): string {
+    public static function get(string|Email $email, string $code): ?string {
         $formattedEmail = $email;
         if ($email instanceof Email) $formattedEmail = $email->value;
 
-        return dbh()
+        $value = dbh()
             ->sel(['action'])
             ->from(System\Mods\Actions::T_ACTIONS)
             ->w([
@@ -42,5 +42,23 @@ abstract class Actions {
                 'code' => $code,
             ])
             ->fetchColumn();
+        if (!is_string($value) || $value === '') {
+            return null;
+        }
+
+        return $value;
+    }
+
+    public static function remove(string|Email $email, string $code): void {
+        $formattedEmail = $email;
+        if ($email instanceof Email) $formattedEmail = $email->value;
+
+        dbh()
+            ->del(System\Mods\Actions::T_ACTIONS)
+            ->w([
+                'email' => $formattedEmail,
+                'code' => $code,
+            ])
+            ->exec();
     }
 }
