@@ -9,5 +9,5 @@ abstract class AbstractController {
         $this->page = $page;
     }
 
-    abstract public function init(): void;
+    abstract public function init(): mixed;
 }
