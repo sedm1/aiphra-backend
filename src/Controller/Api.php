@@ -7,7 +7,7 @@ use Controller;
 use Exception;
 
 final class Api extends AbstractController {
-    private const array ALLOWED_GET_SERVICES = [];
+
     private const array ALLOWED_GET_METHODS = [];
 
     protected Controller\Objects\Context $context;
@@ -83,8 +83,6 @@ final class Api extends AbstractController {
     }
 
     private static function isGetAllowed(string $methodClass): bool {
-        if (in_array($methodClass, self::ALLOWED_GET_SERVICES, true)) return true;
-
         return array_any(self::ALLOWED_GET_METHODS, fn($serviceClass) => str_starts_with($methodClass, $serviceClass . '\\Methods\\'));
 
     }
