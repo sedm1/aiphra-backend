@@ -5,6 +5,5 @@
 /.env
 /.env.*
 !.env.example
-/target/
 .DS_Store
 Thumbs.db

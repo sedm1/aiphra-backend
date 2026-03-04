@@ -1,44 +1,45 @@
-# Local Development
+# Локальная разработка
 
-## Requirements
-- Java 21
-- Maven 3.9+
-- MySQL 8+
+Цель: простая локальная разработка. Бэкенд можно править напрямую и при желании деплоить по FTP.
 
-## Environment
-1. Copy template:
+## PHP backend (локально)
+Требования:
+- PHP 8.5 (или 8.4, если 8.5 недоступен локально)
+
+Запуск:
 ```bash
-cp .env.example .env
-```
-2. Fill values:
-```
-DB_MYSQL_HOST=127.0.0.1
-DB_MYSQL_PORT=3306
-DB_MYSQL_NAME=aiphra
-DB_MYSQL_USER=aiphra
-DB_MYSQL_PASS=secret
-APP_SECRET=change_me
-RATE_LIMIT_ENABLED=true
-RATE_LIMIT_REQUESTS_PER_SECOND=2
-CORS_ALLOWED_ORIGINS=http://localhost:3000
-SERVER_PORT=8080
+cd backend
+php -S 127.0.0.1:9000 -t public
 ```
 
-## Run locally
+Проверка:
+- Откройте http://127.0.0.1:9000/ — должен вернуться JSON.
+
+## Доступ к БД (локально)
+Локальные доступы берём из `.env`, который не коммитится.
+
+1. Скопируйте шаблон:
 ```bash
-mvn spring-boot:run
+copy .env.example .env
+```
+2. Заполните значения:
+```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=aiphra
+DB_USER=aiphra
+DB_PASS=secret
 ```
 
-## API check
-```bash
-curl -X POST http://127.0.0.1:8080/api/v1/add/users/reg \
-  -H "Content-Type: application/json" \
-  -d "{\"email\":\"user@example.com\"}"
-```
+Как подключать в коде:
+- Используйте `getenv('DB_HOST')` и т.д.
+- Если понадобится удобный загрузчик `.env`, добавим `vlucas/phpdotenv`.
 
-Expected response: `1` (JSON number).
+## FTP (опционально)
+Если хотите править через FTP:
+- `public/` — это webroot.
+- На сервер загружайте `public/` и `src/`.
+- Держите локальный код в Git, чтобы не было рассинхрона.
 
-## Docker
-```bash
-docker compose up --build -d
-```
+## Продакшн
+Продакшн‑деплой через CI/CD и Docker. Локальный PHP‑сервер нужен только для разработки.

@@ -1,11 +1,15 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS build
-WORKDIR /app
-COPY pom.xml ./
-COPY src ./src
-RUN mvn -B -DskipTests package
+ARG PHP_VERSION=8.5
+FROM php:${PHP_VERSION}-fpm-alpine
 
-FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/aiphra-backend-1.0.0.jar /app/app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+WORKDIR /var/www/html
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+RUN apk add --no-cache icu-dev \
+    && docker-php-ext-install intl pdo_mysql
+
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts --no-progress
+
+COPY src ./src
+COPY public ./public

@@ -7,6 +7,5 @@ node_modules
 vendor
 docker
 docker-compose.yml
-target
 .env
 .env.*

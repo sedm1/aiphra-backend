@@ -1,0 +1,25 @@
+{
+    "name": "aiphra/backend",
+    "autoload": {
+        "psr-4": {
+        "DB\\": "src/DB/",
+        "API\\": "src/API/",
+        "Selector\\": "src/Selector/",
+        "Controller\\": "src/Controller/",
+        "Services\\": "src/Services",
+        "Utils\\": "src/Utils",
+        "Models\\": "src/Models"
+        },
+        "files": [
+            "src/Globals/Debug.php",
+            "src/Globals/Env.php",
+            "src/Globals/Request.php",
+            "src/Globals/ErrorCodes.php",
+            "src/DB/DB.php"
+        ]
+    },
+    "require": {
+      "ext-pdo": "*",
+      "ext-intl": "*"
+    }
+}
