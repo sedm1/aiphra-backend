@@ -6,7 +6,7 @@ import com.aiphra.backend.error.ErrorCodes;
 /**
  * Базовый класс бизнес-метода.
  * Каждый метод должен наследоваться
- * от общего абстрактного метода с единой точкой вызова.
+ * от общего абстрактного метода с единой точкой вызова
  */
 public abstract class AbstractMethod<TRequest> {
     private boolean called = false;
