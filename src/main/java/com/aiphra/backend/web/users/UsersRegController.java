@@ -21,7 +21,7 @@ public class UsersRegController {
     /**
      * Первичная регистрация пользователя.
      */
-    @PostMapping(value = "/api/add/users/reg", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add/users/reg", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object register(@Valid @RequestBody AddRequest request) {
         return addProvider.getObject().call(request);
     }

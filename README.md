@@ -9,7 +9,7 @@ Spring Boot backend for Aiphra.
 - Docker + Nginx
 
 ## Main endpoint
-- `POST /api/v1/add/users/reg`
+- `POST /v1/add/users/reg`
 
 Request body:
 ```json
