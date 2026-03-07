@@ -1,4 +1,4 @@
-package com.aiphra.backend.web.users;
+package com.aiphra.backend.controller;
 
 import com.aiphra.backend.services.users.methods.reg.Add;
 import com.aiphra.backend.services.users.methods.reg.AddRequest;
