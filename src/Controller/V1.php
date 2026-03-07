@@ -6,13 +6,14 @@ use API\Method\AbstractMethod;
 use Controller;
 use Exception;
 
-final class Api extends AbstractController {
+final class V1 extends AbstractController {
 
     private const array ALLOWED_GET_METHODS = [];
 
     protected Controller\Objects\Context $context;
 
     public function init(): mixed {
+        vd($this->page->getParams());
         $this->context = new Controller\Objects\Context(implode('/', $this->page->getParams()));
 
         $apiClass = $this->getApiMethodClass();

@@ -7,7 +7,6 @@ use RuntimeException;
 final class Page {
     private string $uri;
     private string $path;
-    private array $segments = [];
     private array $params = [];
     private ?string $controllerClass = null;
 
@@ -19,12 +18,12 @@ final class Page {
     public function setParams(): void {
         $trimmed = trim($this->path, '/');
         if ($trimmed === '') {
-            $this->segments = [];
+            $this->params = [];
             return;
         }
 
         $raw = explode('/', $trimmed);
-        $segments = [];
+        $params = [];
         foreach ($raw as $segment) {
             $segment = rawurldecode($segment);
             if ($segment === '') {
@@ -33,36 +32,30 @@ final class Page {
             if (str_ends_with($segment, '.php')) {
                 $segment = substr($segment, 0, -4);
             }
-            $segments[] = $segment;
+            $params[] = $segment;
         }
 
-        $this->segments = $segments;
+        $this->params = $params;
     }
 
     public function setController(): void {
-        $count = count($this->segments);
+        $count = count($this->params);
         if ($count === 0) {
             $this->controllerClass = 'Controller\\E404';
-            $this->params = [];
             return;
         }
 
         for ($i = $count; $i >= 1; $i--) {
-            $prefix = array_slice($this->segments, 0, $i);
-            $suffix = array_slice($this->segments, $i);
+            $prefix = array_slice($this->params, 0, $i);
             $classPath = $this->segmentsToClassPath($prefix);
 
-            foreach ($this->candidateClasses($classPath) as $candidate) {
-                if (class_exists($candidate)) {
-                    $this->controllerClass = $candidate;
-                    $this->params = $suffix;
-                    return;
-                }
+            if (class_exists('Controller\\' . $classPath)) {
+                $this->controllerClass = 'Controller\\' . $classPath;
+                return;
             }
         }
 
         $this->controllerClass = 'Controller\\E404';
-        $this->params = $this->segments;
     }
 
     public function dispatch(): void {
@@ -79,26 +72,8 @@ final class Page {
         $controller->init();
     }
 
-    public function getPath(): string {
-        return $this->path;
-    }
-
     public function getParams(): array {
         return $this->params;
-    }
-
-    public function getSegments(): array {
-        return $this->segments;
-    }
-
-    public function getControllerClass(): ?string {
-        return $this->controllerClass;
-    }
-
-    private function candidateClasses(string $classPath): array {
-        return [
-            'Controller\\' . $classPath,
-        ];
     }
 
     private function segmentsToClassPath(array $segments): string {
