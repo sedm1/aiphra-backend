@@ -6,7 +6,6 @@ Spring Boot backend for Aiphra.
 - Java 21
 - Spring Boot (Web + Spring Data JPA)
 - MySQL
-- Flyway
 - Docker + Nginx
 
 ## Main endpoint
@@ -21,13 +20,14 @@ Response:
 ```json
 1
 ```
+Returned value is the created user id.
 
 ## Architecture (Spring-style)
 - Ordinary Spring controllers and explicit endpoints
-- Method = class (`services/.../methods/...`) called from controller
+- Business logic lives in Spring services (`@Service`) with constructor DI
 - Request validation via Bean Validation (`jakarta.validation`)
 - No reflection-based manual field binding
-- Service methods organized by domain path:
-  `services/<domain>/methods/<feature>/<MethodClass>`
+- Domain-oriented package structure (`controller`, `services`, `repositories`, `models`)
 
 See [docs/local-dev.md](docs/local-dev.md) for local setup.
+
