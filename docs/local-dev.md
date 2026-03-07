@@ -22,14 +22,13 @@ RATE_LIMIT_ENABLED=true
 RATE_LIMIT_REQUESTS_PER_SECOND=2
 CORS_ALLOWED_ORIGINS=http://localhost:3000
 SERVER_PORT=8080
+SPRING_PROFILES_ACTIVE=dev
 ```
 
 ## Run locally
 ```bash
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-
-`Flyway` migrations from `src/main/resources/db/migration` are applied automatically on startup.
 
 ## API check
 ```bash
@@ -38,9 +37,10 @@ curl -X POST http://127.0.0.1:8080/api/v1/add/users/reg \
   -d "{\"email\":\"user@example.com\"}"
 ```
 
-Expected response: `1` (JSON number).
+Expected response: created user id (JSON number), for example `1`.
 
 ## Docker
 ```bash
 docker compose up --build -d
 ```
+
