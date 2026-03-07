@@ -5,15 +5,18 @@ namespace Controller;
 use API\Method\AbstractMethod;
 use Controller;
 use Exception;
+use Services\Users;
 
 final class V1 extends AbstractController {
 
     private const array ALLOWED_GET_METHODS = [];
+    private const array PUBLIC_METHOD_CLASSES = [
+        'Services\\Users\\Methods\\Reg\\Add',
+    ];
 
     protected Controller\Objects\Context $context;
 
     public function init(): mixed {
-        vd($this->page->getParams());
         $this->context = new Controller\Objects\Context(implode('/', $this->page->getParams()));
 
         $apiClass = $this->getApiMethodClass();
@@ -24,6 +27,7 @@ final class V1 extends AbstractController {
             throw new Exception('Invalid API method class', ERROR_CODE_METHOD);
         }
         $httpMethod = $this->validateHttpMethod($apiClass);
+        $this->setAuth($apiClass);
 
         $api = new $apiClass();
         $api->setRawData(self::getRequestData($httpMethod));
@@ -86,6 +90,56 @@ final class V1 extends AbstractController {
     private static function isGetAllowed(string $methodClass): bool {
         return array_any(self::ALLOWED_GET_METHODS, fn($serviceClass) => str_starts_with($methodClass, $serviceClass . '\\Methods\\'));
 
+    }
+
+    private function setAuth(string $apiClass): void {
+        user()->reset();
+
+        if (in_array($apiClass, self::PUBLIC_METHOD_CLASSES, true)) return;
+
+        $accessToken = $this->extractBearerToken();
+        if (!$accessToken) throw new Exception('Authorization required', ERROR_CODE_AUTH);
+
+        $authUser = Users\Mods\Tokens::resolveAccessToken($accessToken);
+        if (is_array($authUser)) {
+            user()->set($authUser['id'], $authUser['email']);
+
+            return;
+        }
+
+        $refreshToken = $this->extractRefreshToken();
+        if (!$refreshToken) throw new Exception('Invalid access token', ERROR_CODE_AUTH);
+
+        $nextTokens = Users\Mods\Tokens::refreshTokens($refreshToken);
+        user()->set($nextTokens['user_id'], $nextTokens['email']);
+
+        if (!headers_sent()) {
+            header('X-Access-Token: ' . $nextTokens['access_token']);
+            header('X-Refresh-Token: ' . $nextTokens['refresh_token']);
+        }
+    }
+
+    private function extractBearerToken(): string {
+        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        if (!is_string($header)) return '';
+
+        if (!preg_match('~^\s*Bearer\s+(.+?)\s*$~i', $header, $matches)) return '';
+
+        return trim($matches[1]);
+    }
+
+    private function extractRefreshToken(): string {
+        $header = $_SERVER['HTTP_X_REFRESH_TOKEN'] ?? '';
+        if (is_string($header) && trim($header) !== '') {
+            return trim($header);
+        }
+
+        $cookie = $_COOKIE['refresh_token'] ?? '';
+        if (is_string($cookie) && trim($cookie) !== '') {
+            return trim($cookie);
+        }
+
+        return '';
     }
 
     private static function getRequestData(string $httpMethod): array {

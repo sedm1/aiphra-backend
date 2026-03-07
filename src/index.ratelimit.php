@@ -1,14 +1,6 @@
 <?php
 
-$enabled = rl_env_bool('RATE_LIMIT_ENABLED', true);
-if (!$enabled) {
-    return;
-}
-
-$requestsPerSecond = rl_env_int('RATE_LIMIT_REQUESTS_PER_SECOND', 2);
-if ($requestsPerSecond < 1) {
-    return;
-}
+const RATE_LIMIT_PER_SECOND = 5;
 
 $storageDir = rl_storage_dir();
 if (!is_dir($storageDir) && !mkdir($storageDir, 0777, true) && !is_dir($storageDir)) {
@@ -58,16 +50,8 @@ if (flock($handle, LOCK_EX)) {
 fclose($handle);
 
 $retryAfter = 1;
-$remaining = max(0, $requestsPerSecond - $count);
-$resetAt = $currentSecond + 1;
 
-if (!headers_sent()) {
-    header('X-RateLimit-Limit: ' . $requestsPerSecond);
-    header('X-RateLimit-Remaining: ' . $remaining);
-    header('X-RateLimit-Reset: ' . $resetAt);
-}
-
-if ($count <= $requestsPerSecond) {
+if ($count <= RATE_LIMIT_PER_SECOND) {
     return;
 }
 
@@ -82,59 +66,47 @@ echo json_encode([
 ]);
 exit;
 
-function rl_env_bool(string $name, bool $default): bool {
-    $value = getenv($name);
-    if ($value === false) {
-        return $default;
-    }
-
-    $normalized = strtolower(trim($value));
-    if (in_array($normalized, ['1', 'true', 'on', 'yes'], true)) {
-        return true;
-    }
-    if (in_array($normalized, ['0', 'false', 'off', 'no', ''], true)) {
-        return false;
-    }
-
-    return $default;
-}
-
-function rl_env_int(string $name, int $default): int {
-    $value = getenv($name);
-    if ($value === false) {
-        return $default;
-    }
-
-    if (!is_numeric($value)) {
-        return $default;
-    }
-
-    return (int)$value;
-}
-
 function rl_client_ip(): string {
-    $forwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
-    if ($forwardedFor !== '') {
-        $parts = explode(',', $forwardedFor);
-        foreach ($parts as $part) {
-            $candidate = trim($part);
-            if (filter_var($candidate, FILTER_VALIDATE_IP)) {
-                return $candidate;
+    $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
+
+    // Trust forwarding headers only when request came from known reverse proxy.
+    if ( $remoteAddr !== '') {
+        $forwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+        if ($forwardedFor !== '') {
+            $parts = explode(',', $forwardedFor);
+            foreach ($parts as $part) {
+                $candidate = trim($part);
+                if (filter_var($candidate, FILTER_VALIDATE_IP)) {
+                    return $candidate;
+                }
             }
+        }
+
+        $xRealIp = $_SERVER['HTTP_X_REAL_IP'] ?? '';
+        if ($xRealIp !== '' && filter_var($xRealIp, FILTER_VALIDATE_IP)) {
+            return $xRealIp;
         }
     }
 
-    $xRealIp = $_SERVER['HTTP_X_REAL_IP'] ?? '';
-    if ($xRealIp !== '' && filter_var($xRealIp, FILTER_VALIDATE_IP)) {
-        return $xRealIp;
-    }
-
-    $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
     if ($remoteAddr !== '' && filter_var($remoteAddr, FILTER_VALIDATE_IP)) {
         return $remoteAddr;
     }
 
     return 'unknown';
+}
+
+function rl_env_csv(string $name): array {
+    $value = getenv($name);
+    if ($value === false) {
+        return [];
+    }
+
+    $items = preg_split('/[\s,]+/', trim($value), -1, PREG_SPLIT_NO_EMPTY);
+    if (!is_array($items)) {
+        return [];
+    }
+
+    return array_values(array_unique($items));
 }
 
 function rl_storage_dir(): string {

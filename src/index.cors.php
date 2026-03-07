@@ -52,7 +52,7 @@ function apply_cors(): void {
     if ($allowedOrigin !== null) {
         header('Access-Control-Allow-Origin: ' . $allowedOrigin);
         header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Expose-Headers: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After');
+        header('Access-Control-Expose-Headers: Retry-After, X-Access-Token, X-Refresh-Token');
     }
 
     $method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
@@ -71,7 +71,7 @@ function apply_cors(): void {
 
     $requestHeaders = trim((string)($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? ''));
     if ($requestHeaders === '') {
-        $requestHeaders = 'Content-Type, X-Requested-With, Authorization';
+        $requestHeaders = 'Content-Type, X-Requested-With, Authorization, X-Refresh-Token';
     }
 
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -80,3 +80,6 @@ function apply_cors(): void {
     http_response_code(204);
     exit;
 }
+
+// Apply CORS policy for every request (including preflight OPTIONS).
+apply_cors();

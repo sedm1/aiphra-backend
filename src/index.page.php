@@ -11,7 +11,7 @@ if (!$page instanceof Controller\Page) {
 try {
     $page->dispatch();
 } catch (\Throwable $e) {
-    $code = (int) $e->getCode();
+    $code = $e->getCode();
     if ($code < 400 || $code >= 600) {
         $code = 500;
     }
