@@ -1,6 +1,6 @@
 package com.aiphra.backend.error;
 
-import com.aiphra.backend.web.ErrorResponse;
+import com.aiphra.backend.dto.ErrorResponse;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,7 @@ package com.aiphra.backend.filter;
 import com.aiphra.backend.api.version.ApiVersionResolver;
 import com.aiphra.backend.error.ApiException;
 import com.aiphra.backend.error.ErrorCodes;
-import com.aiphra.backend.web.ErrorResponse;
+import com.aiphra.backend.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.aiphra.backend.web;
+package com.aiphra.backend.dto;
 
 /**
  * Единый формат JSON-ошибки.

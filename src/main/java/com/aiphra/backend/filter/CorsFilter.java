@@ -2,7 +2,7 @@ package com.aiphra.backend.filter;
 
 import com.aiphra.backend.config.AppProperties;
 import com.aiphra.backend.error.ErrorCodes;
-import com.aiphra.backend.web.ErrorResponse;
+import com.aiphra.backend.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
