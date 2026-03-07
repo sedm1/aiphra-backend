@@ -29,6 +29,8 @@ SERVER_PORT=8080
 mvn spring-boot:run
 ```
 
+`Flyway` migrations from `src/main/resources/db/migration` are applied automatically on startup.
+
 ## API check
 ```bash
 curl -X POST http://127.0.0.1:8080/api/v1/add/users/reg \

@@ -2,10 +2,16 @@ spring:
   application:
     name: aiphra-backend
   datasource:
-    url: jdbc:mysql://${DB_MYSQL_HOST:127.0.0.1}:${DB_MYSQL_PORT:3306}/${DB_MYSQL_NAME:}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://${DB_MYSQL_HOST:127.0.0.1}:${DB_MYSQL_PORT:3306}/${DB_MYSQL_NAME:aiphra}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: ${DB_MYSQL_USER:}
     password: ${DB_MYSQL_PASS:}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
   mvc:
     throw-exception-if-no-handler-found: true
   web:

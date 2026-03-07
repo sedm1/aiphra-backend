@@ -4,8 +4,9 @@ Spring Boot backend for Aiphra.
 
 ## Stack
 - Java 21
-- Spring Boot (Web + JDBC)
+- Spring Boot (Web + Spring Data JPA)
 - MySQL
+- Flyway
 - Docker + Nginx
 
 ## Main endpoint
