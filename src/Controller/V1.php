@@ -6,6 +6,8 @@ use API\Method\AbstractMethod;
 use Controller;
 use Exception;
 use Services\Users;
+use stdClass;
+use Utils\Cookies;
 
 final class V1 extends AbstractController {
 
@@ -33,13 +35,16 @@ final class V1 extends AbstractController {
         $api->setRawData(self::getRequestData($httpMethod));
         $result = $api->call();
 
-        $json = json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        if (!is_string($json)) {
-            throw new Exception('Cannot encode API response', ERROR_CODE_INTRENAL_SERVER_ERROR);
-        }
-
-        echo $json;
+        $response = $this->getResponse($result);
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
         exit();
+    }
+
+    private static function getResponse(mixed $result): stdClass {
+        $response = new stdClass();
+        $response->result = $result;
+
+        return $response;
     }
 
     /**
@@ -80,16 +85,11 @@ final class V1 extends AbstractController {
             throw new Exception('Method not allowed', ERROR_CODE_METHOD_NOT_ALLOWED);
         }
 
-        if ($httpMethod === 'GET' && !self::isGetAllowed($methodClass)) {
+        if ($httpMethod === 'GET' && !in_array($methodClass, self::ALLOWED_GET_METHODS)) {
             throw new Exception('GET is not allowed for this API method', ERROR_CODE_METHOD_NOT_ALLOWED);
         }
 
         return $httpMethod;
-    }
-
-    private static function isGetAllowed(string $methodClass): bool {
-        return array_any(self::ALLOWED_GET_METHODS, fn($serviceClass) => str_starts_with($methodClass, $serviceClass . '\\Methods\\'));
-
     }
 
     private function setAuth(string $apiClass): void {
@@ -97,9 +97,8 @@ final class V1 extends AbstractController {
 
         if (in_array($apiClass, self::PUBLIC_METHOD_CLASSES, true)) return;
 
-        $accessToken = $this->extractBearerToken();
+        $accessToken = Cookies::get('access_token');
         if (!$accessToken) throw new Exception('Authorization required', ERROR_CODE_AUTH);
-
         $authUser = Users\Mods\Tokens::resolveAccessToken($accessToken);
         if (is_array($authUser)) {
             user()->set($authUser['id'], $authUser['email']);
@@ -107,39 +106,18 @@ final class V1 extends AbstractController {
             return;
         }
 
-        $refreshToken = $this->extractRefreshToken();
+        $refreshToken = Cookies::get('refresh_token');
         if (!$refreshToken) throw new Exception('Invalid access token', ERROR_CODE_AUTH);
-
         $nextTokens = Users\Mods\Tokens::refreshTokens($refreshToken);
         user()->set($nextTokens['user_id'], $nextTokens['email']);
+
+        Cookies::set('access_token', $nextTokens['access_token'], getenv('AUTH_ACCESS_TTL'));
+        Cookies::set('refresh_token', $nextTokens['refresh_token'], getenv('AUTH_REFRESH_TTL'));
 
         if (!headers_sent()) {
             header('X-Access-Token: ' . $nextTokens['access_token']);
             header('X-Refresh-Token: ' . $nextTokens['refresh_token']);
         }
-    }
-
-    private function extractBearerToken(): string {
-        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-        if (!is_string($header)) return '';
-
-        if (!preg_match('~^\s*Bearer\s+(.+?)\s*$~i', $header, $matches)) return '';
-
-        return trim($matches[1]);
-    }
-
-    private function extractRefreshToken(): string {
-        $header = $_SERVER['HTTP_X_REFRESH_TOKEN'] ?? '';
-        if (is_string($header) && trim($header) !== '') {
-            return trim($header);
-        }
-
-        $cookie = $_COOKIE['refresh_token'] ?? '';
-        if (is_string($cookie) && trim($cookie) !== '') {
-            return trim($cookie);
-        }
-
-        return '';
     }
 
     private static function getRequestData(string $httpMethod): array {

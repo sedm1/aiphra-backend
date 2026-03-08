@@ -1,12 +1,15 @@
 <?php
 
-namespace Utils;
+namespace Utils\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use RuntimeException;
 
-final class Mail {
-    public function send(string $to, string $template, array $data = [], ?string $subject = null): bool {
+/**
+ * Клас для работы с отправкой сообщений
+ */
+trait EmailTrait {
+    public function send_mail(string $to, string $template, array $data = [], ?string $subject = null): bool {
         $mail = new PHPMailer(true);
 
         $mail->CharSet = 'UTF-8';

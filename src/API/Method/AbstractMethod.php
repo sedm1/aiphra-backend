@@ -8,7 +8,6 @@ use ReflectionProperty;
 use ReflectionUnionType;
 
 abstract class AbstractMethod {
-    protected const bool IS_AJAX_API_ONLY = false;
 
     private bool $_prepared = false;
     private bool $_isCalled = false;
@@ -129,9 +128,38 @@ abstract class AbstractMethod {
             case 'mixed':
                 return $val;
             default:
-                if (class_exists($typeName) && $val instanceof $typeName) {
+                if (!class_exists($typeName) && !enum_exists($typeName)) {
+                    throw new Exception("Unsupported type '$typeName' for '$name'");
+                }
+
+                if ($val instanceof $typeName) {
                     return $val;
                 }
+
+                if (enum_exists($typeName)) {
+                    if (!is_string($val) && !is_int($val)) throw new Exception("Invalid type for '$name'");
+
+                    $enumValue = $typeName::tryFrom($val);
+                    if ($enumValue === null) throw new Exception("Invalid value for '$name'");
+
+                    return $enumValue;
+                }
+
+                if (is_subclass_of($typeName, \API\Types\AbstractString::class)) {
+                    if (!is_string($val)) throw new Exception("Invalid type for '$name'");
+                    return new $typeName($val);
+                }
+
+                if (is_subclass_of($typeName, \API\Types\AbstractTypedArray::class)) {
+                    if (!is_array($val)) throw new Exception("Invalid type for '$name'");
+                    return new $typeName($val);
+                }
+
+                if (is_subclass_of($typeName, \API\Types\AbstractObject::class)) {
+                    if (!is_array($val)) throw new Exception("Invalid type for '$name'");
+                    return new $typeName(...$val);
+                }
+
                 throw new Exception("Unsupported type '$typeName' for '$name'");
         }
     }

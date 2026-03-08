@@ -2,14 +2,17 @@
 
 namespace Utils;
 
+use Utils;
+
 final class Core {
-    private ?Mail $mailService = null;
 
-    public function mail(): Mail {
-        if ($this->mailService === null) {
-            $this->mailService = new Mail();
-        }
+    use Utils\Core\EmailTrait;
 
-        return $this->mailService;
+    public function getSiteHost(): string {
+        return getenv('SITE_HOST');
+    }
+
+    public function getApiSiteHost(): string {
+        return getenv('API_SITE_HOST');
     }
 }

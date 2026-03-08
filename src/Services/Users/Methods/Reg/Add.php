@@ -32,10 +32,24 @@ final class Add extends API\Method\AbstractMethod {
 
         $code = System\Mods\Actions::add($this->email, System\Types\Action::Email);
 
-        vd($code);
+        $link = core()->getApiSiteHost() . '/income/login?' . http_build_query([
+                'email' => $this->email->value,
+                'code' => $code
+            ]);
 
+        vd($link);
+        return 123;
 
-        return 1;
+        // TODO: Подключить
+//        return core()->send_mail(
+//            $this->email->value,
+//            '',
+//            [
+//                'link' => $link,
+//                'code' => $code,
+//            ],
+//            'Регистрация'
+//        );
     }
 
 }

@@ -21,6 +21,7 @@
   "require": {
     "ext-pdo": "*",
     "ext-intl": "*",
-    "phpmailer/phpmailer": "^7.0"
+    "phpmailer/phpmailer": "^7.0",
+    "ext-openssl": "*"
   }
 }
