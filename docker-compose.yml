@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./public:/var/www/html/public:ro
+      - ./.env:/var/www/html/public:ro
     networks:
       - aiphra-net
     env_file:
