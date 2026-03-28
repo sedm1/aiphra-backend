@@ -10,15 +10,16 @@ if (!$page instanceof Controller\Page) {
 
 try {
     $page->dispatch();
-} catch (\Throwable $e) {
-    $code = $e->getCode();
-    if ($code < 400 || $code >= 600) {
-        $code = 500;
-    }
-    http_response_code($code);
+} catch (Throwable $e) {
+    http_response_code(200);
 
-    echo json_encode([
-        'error' => true,
-        'message' => $e->getMessage()
-    ]);
+    $response = new stdClass();
+    $response->errors = [
+        'message' => $e->getMessage(),
+        'code' => $e->getCode()
+    ];
+    if (core()->info) $response->info = core()->info;
+
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit();
 }

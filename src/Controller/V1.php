@@ -43,6 +43,7 @@ final class V1 extends AbstractController {
     private static function getResponse(mixed $result): stdClass {
         $response = new stdClass();
         $response->result = $result;
+        if (core()->info) $response->info = core()->info;
 
         return $response;
     }

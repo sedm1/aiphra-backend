@@ -7,6 +7,7 @@ use Utils;
 final class Core {
 
     use Utils\Core\EmailTrait;
+    use Utils\Core\InfoTrait;
 
     public function getSiteHost(): string {
         return getenv('SITE_HOST');
