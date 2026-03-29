@@ -22,7 +22,7 @@ final class Add extends API\Method\AbstractMethod {
     /**
      * @throws Exception
      */
-    protected function exec(): int {
+    protected function exec(): string {
         $userExist = dbh()
             ->sel(1)
             ->from(User::T)
@@ -32,24 +32,11 @@ final class Add extends API\Method\AbstractMethod {
 
         $code = System\Mods\Actions::add($this->email, System\Types\Action::Email);
 
-        $link = core()->getApiSiteHost() . '/income/login?' . http_build_query([
+        //TODO: Заменить на отправку кода на почту
+        return core()->getApiSiteHost() . '/income/login?' . http_build_query([
                 'email' => $this->email->value,
                 'code' => $code
             ]);
-
-        vd($link);
-        return 123;
-
-        // TODO: Подключить
-//        return core()->send_mail(
-//            $this->email->value,
-//            '',
-//            [
-//                'link' => $link,
-//                'code' => $code,
-//            ],
-//            'Регистрация'
-//        );
     }
 
 }

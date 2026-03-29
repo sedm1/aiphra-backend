@@ -15,8 +15,10 @@ try {
 
     $response = new stdClass();
     $response->errors = [
-        'message' => $e->getMessage(),
-        'code' => $e->getCode()
+        [
+            'message' => $e->getMessage(),
+            'code' => $e->getCode()
+        ]
     ];
     if (core()->info) $response->info = core()->info;
 

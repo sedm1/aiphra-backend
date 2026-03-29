@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

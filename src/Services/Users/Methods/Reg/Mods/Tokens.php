@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Users\Mods;
+namespace Services\Users\Methods\Reg\Mods;
 
 use DateTimeImmutable;
 use Exception;

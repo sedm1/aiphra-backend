@@ -100,7 +100,7 @@ final class V1 extends AbstractController {
 
         $accessToken = Cookies::get('access_token');
         if (!$accessToken) throw new Exception('Authorization required', ERROR_CODE_AUTH);
-        $authUser = Users\Mods\Tokens::resolveAccessToken($accessToken);
+        $authUser = Users\Methods\Reg\Mods\Tokens::resolveAccessToken($accessToken);
         if (is_array($authUser)) {
             user()->set($authUser['id'], $authUser['email']);
 
@@ -109,7 +109,7 @@ final class V1 extends AbstractController {
 
         $refreshToken = Cookies::get('refresh_token');
         if (!$refreshToken) throw new Exception('Invalid access token', ERROR_CODE_AUTH);
-        $nextTokens = Users\Mods\Tokens::refreshTokens($refreshToken);
+        $nextTokens = Users\Methods\Reg\Mods\Tokens::refreshTokens($refreshToken);
         user()->set($nextTokens['user_id'], $nextTokens['email']);
 
         Cookies::set('access_token', $nextTokens['access_token'], getenv('AUTH_ACCESS_TTL'));

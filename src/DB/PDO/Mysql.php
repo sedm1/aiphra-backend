@@ -60,7 +60,7 @@ class Mysql extends AbstractDB {
         return $this;
     }
 
-    public function sel(string|array $fieldsNames = '*'): static {
+    public function sel(string|array|int $fieldsNames = '*'): static {
         $this->query = 'SELECT ';
 
         if ($fieldsNames === '*') {
@@ -197,24 +197,21 @@ class Mysql extends AbstractDB {
 
     public function fetchColumn(int $columnNumber = 0): mixed {
         $this->pdoStatement = $this->dbh->query($this->query);
-        if ($this->pdoStatement) return $this->pdoStatement->fetchColumn($columnNumber);
-        return null;
+        return $this->pdoStatement->fetchColumn($columnNumber);
     }
 
     public function fetch(?int $fetchStyle = null): mixed {
         if (!$fetchStyle) $fetchStyle = PDO::FETCH_ASSOC;
 
         $this->pdoStatement = $this->dbh->query($this->query);
-        if ($this->pdoStatement) return $this->pdoStatement->fetch($fetchStyle);
-        return null;
+        return $this->pdoStatement->fetch($fetchStyle);
     }
 
     public function fetchAll(?int $fetchStyle = null): array {
         if (!$fetchStyle) $fetchStyle = PDO::FETCH_ASSOC;
 
         $this->pdoStatement = $this->dbh->query($this->query);
-        if ($this->pdoStatement) return $this->pdoStatement->fetchAll($fetchStyle);
-        return [];
+        return $this->pdoStatement->fetchAll($fetchStyle);
     }
 
     public function insert(string $tableName, string|array $fieldsNames = ''): static {

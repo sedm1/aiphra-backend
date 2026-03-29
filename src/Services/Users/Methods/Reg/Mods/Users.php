@@ -1,8 +1,9 @@
 <?php
 
-namespace Services\Users\Mods;
+namespace Services\Users\Methods\Reg\Mods;
 
 use Models;
+use Services\Users\Methods\Reg\Mods\Tokens;
 use Utils;
 
 abstract class Users {
@@ -19,7 +20,7 @@ abstract class Users {
             ])
             ->exec();
 
-        return dbh()->id();
+        return (int) dbh()->id();
     }
 
     /**
