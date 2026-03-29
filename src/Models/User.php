@@ -9,5 +9,4 @@ final class User extends AbstractModel {
         'id',
         'email',
     ];
-
 }

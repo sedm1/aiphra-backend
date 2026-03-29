@@ -99,16 +99,24 @@ final class V1 extends AbstractController {
         if (in_array($apiClass, self::PUBLIC_METHOD_CLASSES, true)) return;
 
         $accessToken = Cookies::get('access_token');
-        if (!$accessToken) throw new Exception('Authorization required', ERROR_CODE_AUTH);
-        $authUser = Users\Methods\Reg\Mods\Tokens::resolveAccessToken($accessToken);
-        if (is_array($authUser)) {
-            user()->set($authUser['id'], $authUser['email']);
+        if ($accessToken) {
+            $authUser = Users\Methods\Reg\Mods\Tokens::resolveAccessToken($accessToken);
+            if (is_array($authUser)) {
+                user()->set($authUser['id'], $authUser['email']);
 
-            return;
+                return;
+            }
         }
 
         $refreshToken = Cookies::get('refresh_token');
-        if (!$refreshToken) throw new Exception('Invalid access token', ERROR_CODE_AUTH);
+        if (!$refreshToken) {
+            if ($accessToken) {
+                throw new Exception('Invalid access token', ERROR_CODE_AUTH);
+            }
+
+            throw new Exception('Authorization required', ERROR_CODE_AUTH);
+        }
+
         $nextTokens = Users\Methods\Reg\Mods\Tokens::refreshTokens($refreshToken);
         user()->set($nextTokens['user_id'], $nextTokens['email']);
 
