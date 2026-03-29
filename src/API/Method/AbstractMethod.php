@@ -205,5 +205,34 @@ abstract class AbstractMethod {
         $this->setRawData($rawData);
     }
 
+    /**
+     * Сгенерировать настройки для Selector на основе параметров текущего API метода.
+     *
+     * @return array{
+     *   fields: array,
+     *   filters: array,
+     *   id: ?int,
+     *   orders: array,
+     *   limit: ?int,
+     *   offset: int,
+     *   fetch_style: mixed
+     * }
+     */
+    public function getSelectorData(): array {
+        if (!$this->_prepared) {
+            throw new Exception('Method params do not prepared, getSelectorData() can use only in exec()');
+        }
+
+        return [
+            'fields' => property_exists($this, 'fields') ? ($this->fields ?? []) : [],
+            'filters' => property_exists($this, 'filters') ? ($this->filters ?? []) : [],
+            'id' => property_exists($this, 'id') ? ($this->id ?? null) : null,
+            'orders' => property_exists($this, 'orders') ? ($this->orders ?? []) : [],
+            'limit' => property_exists($this, 'limit') ? ($this->limit ?? null) : null,
+            'offset' => property_exists($this, 'offset') ? ($this->offset ?? 0) : 0,
+            'fetch_style' => property_exists($this, 'fetch_style') ? ($this->fetch_style ?? null) : null,
+        ];
+    }
+
     abstract protected function exec(): mixed;
 }
