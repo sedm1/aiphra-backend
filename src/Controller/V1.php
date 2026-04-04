@@ -12,9 +12,7 @@ use Utils\Cookies;
 final class V1 extends AbstractController {
 
     private const array ALLOWED_GET_METHODS = [];
-    private const array PUBLIC_METHOD_CLASSES = [
-        'Services\\Users\\Methods\\Reg\\Add',
-    ];
+    private const array PUBLIC_METHOD_CLASSES = ['Services\\Users\\Methods\\Reg\\Add', 'Services\\Users\\Methods\\Login\\Get',];
 
     protected Controller\Objects\Context $context;
 
@@ -153,10 +151,7 @@ final class V1 extends AbstractController {
 
                 $jsonData = json_decode($rawData, true);
                 if (!is_array($jsonData)) {
-                    throw new Exception(
-                        "Invalid Content-Type: $contentType (post-data must be of type object or array)",
-                        ERROR_CODE_REQUEST_DATA,
-                    );
+                    throw new Exception("Invalid Content-Type: $contentType (post-data must be of type object or array)", ERROR_CODE_REQUEST_DATA,);
                 }
 
                 $requestData = array_merge($requestData, $jsonData);

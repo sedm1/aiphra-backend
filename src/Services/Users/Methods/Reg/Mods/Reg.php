@@ -33,7 +33,5 @@ abstract class Reg {
 
         System\Mods\Actions::del($email, $code);
         Users\Methods\Reg\Mods\Users::auth($userId, getenv('SITE_HOST'));
-
-        return true;
     }
 }
