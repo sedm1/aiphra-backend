@@ -65,7 +65,7 @@ abstract class Users {
         return implode('', $password);
     }
 
-    public static function auth(int $userId, string $redirect = '/'): void {
+    public static function auth(int $userId, ?string $redirect = null): int {
         $accessToken = Tokens::issueAccessToken($userId);
         $refreshToken = Tokens::issueRefreshToken($userId);
 
@@ -75,9 +75,11 @@ abstract class Users {
         if (!headers_sent()) {
             header('X-Access-Token: ' . $accessToken);
             header('X-Refresh-Token: ' . $refreshToken);
-            header('Location: ' . $redirect, true, 302);
+            if ($redirect !== null && $redirect !== '') {
+                header('Location: ' . $redirect, true, 302);
+            }
         }
 
-        exit();
+        return $userId;
     }
 }

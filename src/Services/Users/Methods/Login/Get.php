@@ -26,7 +26,7 @@ final class Get extends API\Method\AbstractMethod {
      * @throws Exception пользователь не найден
      * @throws Exception пароль пользователя неверен
      */
-    protected function exec(): never {
+    protected function exec(): int {
         $user = Users::getByEmail($this->email->value);
         if (!$user) {
             throw new Exception('User not found', ERROR_CODE_AUTH);
@@ -38,7 +38,7 @@ final class Get extends API\Method\AbstractMethod {
         }
 
         $userId = intval($user['id']);
-        Users::auth($userId, getenv('SITE_HOST'));
+        return Users::auth($userId);
     }
 
 }
