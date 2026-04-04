@@ -43,7 +43,7 @@ abstract class Tokens {
                 'user_id' => $userId,
                 'token_hash' => $tokenHash,
                 'expires_at' => $expiresAtString,
-            ])
+            ], true)
             ->exec();
 
         return $token;
@@ -54,7 +54,7 @@ abstract class Tokens {
             throw new Exception('Refresh token is required', ERROR_CODE_AUTH);
         }
 
-        // Single-use refresh token: read + conditional revoke must be atomic.
+        // Single active refresh token per user: each rotation replaces token_hash.
         $tokenHash = hash_hmac('sha256', $refreshToken, getenv('APP_SECRET'));
         $db = dbh();
 
@@ -62,7 +62,7 @@ abstract class Tokens {
             $db->beginTransaction();
 
             $row = $db
-                ->sel(['id', 'user_id', 'expires_at', 'revoked_at'])
+                ->sel(['id', 'user_id', 'expires_at'])
                 ->from(self::T_REFRESH)
                 ->w(['token_hash' => $tokenHash])
                 ->fetch();
@@ -74,23 +74,6 @@ abstract class Tokens {
             $expiresTs = strtotime($row['expires_at']);
             if ($expiresTs <= time()) {
                 throw new Exception('Refresh token expired', ERROR_CODE_AUTH);
-            }
-
-            $revokedAt = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
-            $revokedAtString = $revokedAt->format('Y-m-d H:i:s');
-
-            $updatedRows = $db
-                ->update(self::T_REFRESH)
-                ->set(['revoked_at' => $revokedAtString])
-                ->w(
-                    "`id` = " . $db->prepare_val($row['id'])
-                    . " AND `revoked_at` IS NULL"
-                    . " AND `expires_at` > " . $db->prepare_val($revokedAtString)
-                )
-                ->exec();
-
-            if ($updatedRows !== 1) {
-                throw new Exception('Invalid refresh token', ERROR_CODE_AUTH);
             }
 
             $user = self::userById($row['user_id']);
