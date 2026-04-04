@@ -1,0 +1,13 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PhpIncompatibleReturnTypeInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpFieldAssignmentTypeMismatchInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpStrictTypeCheckingInspection" enabled="true" level="ERROR" enabled_by_default="true">
+      <option name="ENABLE_WITHOUT_DECLARE_STRICT_DIRECTIVE" value="true" />
+    </inspection_tool>
+    <inspection_tool class="PhpStanGlobal" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpDocSignatureInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpReturnDocTypeMismatchInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+  </profile>
+</component>

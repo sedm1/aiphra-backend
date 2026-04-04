@@ -12,11 +12,14 @@ use Utils\Cookies;
 final class V1 extends AbstractController {
 
     private const array ALLOWED_GET_METHODS = [];
-    private const array PUBLIC_METHOD_CLASSES = ['Services\\Users\\Methods\\Reg\\Add', 'Services\\Users\\Methods\\Login\\Get',];
+    private const array PUBLIC_METHOD_CLASSES = [
+        'Services\\Users\\Methods\\Reg\\Add',
+        'Services\\Users\\Methods\\Login\\Get'
+    ];
 
     protected Controller\Objects\Context $context;
 
-    public function init(): mixed {
+    public function init(): string {
         $this->context = new Controller\Objects\Context(implode('/', $this->page->getParams()));
 
         $apiClass = $this->getApiMethodClass();
