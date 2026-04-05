@@ -1,12 +1,12 @@
 <?php
 
-namespace Services\Users\Methods\Reg\Mods;
+namespace Services\Users\Mods;
 
 use Models;
-use Services\Users\Methods\Reg\Mods\Tokens;
+use Services\Users;
 use Utils;
 
-abstract class Users {
+abstract class User {
 
     /**
      * Добавить пользователя в БД
@@ -25,9 +25,6 @@ abstract class Users {
 
     /**
      * Получить пользователя по email
-     *
-     * @param string $email
-     * @return array|false
      */
     public static function getByEmail(string $email): false|array {
         return dbh()
@@ -66,8 +63,8 @@ abstract class Users {
     }
 
     public static function auth(int $userId, ?string $redirect = null): int {
-        $accessToken = Tokens::issueAccessToken($userId);
-        $refreshToken = Tokens::issueRefreshToken($userId);
+        $accessToken = Users\Mods\Tokens::issueAccessToken($userId);
+        $refreshToken = Users\Mods\Tokens::issueRefreshToken($userId);
 
         Utils\Cookies::set('access_token', $accessToken, getenv('AUTH_ACCESS_TTL'));
         Utils\Cookies::set('refresh_token', $refreshToken, getenv('AUTH_REFRESH_TTL'));

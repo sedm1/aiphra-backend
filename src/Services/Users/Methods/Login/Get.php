@@ -4,7 +4,7 @@ namespace Services\Users\Methods\Login;
 
 use API;
 use Exception;
-use Services\Users\Methods\Reg\Mods\Users;
+use Services\Users;
 use Utils;
 
 /**
@@ -27,7 +27,7 @@ final class Get extends API\Method\AbstractMethod {
      * @throws Exception пароль пользователя неверен
      */
     protected function exec(): int {
-        $user = Users::getByEmail($this->email->value);
+        $user = Users\Mods\User::getByEmail($this->email->value);
         if (!$user) {
             throw new Exception('User not found', ERROR_CODE_AUTH);
         }
@@ -37,8 +37,7 @@ final class Get extends API\Method\AbstractMethod {
             throw new Exception('Invalid password', ERROR_CODE_AUTH);
         }
 
-        $userId = intval($user['id']);
-        return Users::auth($userId);
+        return Users\Mods\User::auth($user['id']);
     }
 
 }

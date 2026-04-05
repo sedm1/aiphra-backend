@@ -3,9 +3,11 @@
 namespace Services\Users\Methods\Me;
 
 use API;
+use Exception;
 use Models\User;
 use Selector\Field;
 use Selector\Selector;
+use Selector\Types\FetchStyle;
 use Selector\Types\Operator;
 
 /**
@@ -16,13 +18,16 @@ final class Get extends API\Method\AbstractWithModel {
 
     /**
      * @return array{
-     *
+     *  id: int,
+     *  email: string,
      * }
+     * @throws Exception
      */
     protected function exec(): mixed {
         $selector = new Selector(self::MODEL);
         $selector->setFieldsSelect(['id', 'email']);
         $selector->addFieldFilter(Field::genFilterData('id', Operator::Equals, [user()->id]));
+        $selector->setFetchStyle(FetchStyle::Fetch);
 
         return $selector->execFetch();
     }

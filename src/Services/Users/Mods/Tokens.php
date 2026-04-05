@@ -1,13 +1,13 @@
 <?php
 
-namespace Services\Users\Methods\Reg\Mods;
+namespace Services\Users\Mods;
 
 use DateTimeImmutable;
 use Exception;
 use Models\User;
 
 abstract class Tokens {
-    public const string T_REFRESH = 'aiphra.auth_refresh_tokens';
+    public final const string T_REFRESH = 'aiphra.auth_refresh_tokens';
 
     public static function issueAccessToken(int $userId, ?string $email = null): string {
         // Access token is self-contained: id/email are signed and verified without DB lookup.
@@ -99,11 +99,7 @@ abstract class Tokens {
 
     public static function resolveAccessToken(string $accessToken): ?array {
         $parts = explode('.', $accessToken, 6);
-        if (count($parts) !== 6) {
-            return null;
-        }
-
-        if ($parts[0] !== 'at2') {
+        if (count($parts) !== 6 || $parts[0] !== 'at2') {
             return null;
         }
 

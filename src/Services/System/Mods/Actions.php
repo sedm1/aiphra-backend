@@ -8,7 +8,7 @@ use Services\System;
 
 abstract class Actions {
 
-    public const string T_ACTIONS = 'aiphra.actions';
+    public final const string T_ACTIONS = 'aiphra.actions';
 
     /**
      * Добавить событие

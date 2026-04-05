@@ -3,6 +3,8 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="PhpIncompatibleReturnTypeInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpFieldAssignmentTypeMismatchInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpUndefinedClassInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpUndefinedVariableInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpStrictTypeCheckingInspection" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="ENABLE_WITHOUT_DECLARE_STRICT_DIRECTIVE" value="true" />
     </inspection_tool>

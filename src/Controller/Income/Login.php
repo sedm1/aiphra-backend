@@ -20,7 +20,7 @@ final class Login extends Controller\AbstractController {
 
         if (!$code || !$email) throw new Exception('Code and email are required', ERROR_CODE_REQUEST_DATA);
 
-        Users\Methods\Reg\Mods\Reg::acceptEmail($email, $code);
+        Users\Mods\Reg::acceptEmail($email, $code);
 
         exit();
     }
